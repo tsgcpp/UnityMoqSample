@@ -87,6 +87,40 @@ namespace Tests
         }
 
         [Test]
+        public void Verifiable_SetUpした内容が実施されたことの確認()
+        {
+            // IHolderのモックオブジェクトの作成
+            var converterMock = new Mock<IConverter>();
+
+            converterMock.Setup(m => m.Convert(2)).Returns("2").Verifiable();
+            converterMock.Setup(m => m.Convert(3)).Returns("3").Verifiable();
+
+            var y = converterMock.Object.Convert(2);
+            var z = converterMock.Object.Convert(3);
+
+            // Verifiableしたケースがすべてコールされたら正常
+            converterMock.Verify();
+        }
+
+        [Test]
+        public void Verifiable_IsAnyがある場合はその他パターンのコールが必要なことの確認()
+        {
+            // IHolderのモックオブジェクトの作成
+            var converterMock = new Mock<IConverter>();
+
+            converterMock.Setup(m => m.Convert(It.IsAny<int>())).Returns("None").Verifiable();
+            converterMock.Setup(m => m.Convert(2)).Returns("2").Verifiable();
+            converterMock.Setup(m => m.Convert(3)).Returns("3").Verifiable();
+
+            var x = converterMock.Object.Convert(1);
+            var y = converterMock.Object.Convert(2);
+            var z = converterMock.Object.Convert(3);
+
+            // Verifiableしたケースがすべてコールされたら正常
+            converterMock.Verify();
+        }
+
+        [Test]
         public void Verify_ILogger_Logメソッドがコールされていないことの確認()
         {
             // IHolderのモックオブジェクトの作成
@@ -196,6 +230,11 @@ namespace Tests
         public interface ILogger
         {
             void Log(string message);
+        }
+
+        public interface IConverter
+        {
+            string Convert(int value);
         }
     }
 }
