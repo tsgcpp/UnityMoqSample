@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Moq;
 
@@ -9,14 +10,18 @@ namespace Tests
         public void Mock_プロパティチェーンでモック化する場合()
         {
             // setup
-            var fooMock = new Mock<Foo>();
+            var fooMock = new Mock<IFoo>();
 
             // when
             fooMock.Setup(m => m.Bar.Baz.Message).Returns("Hello Chain");
 
             // then
-            Foo target = fooMock.Object;
+            IFoo target = fooMock.Object;
             Assert.That(target.Bar.Baz.Message, Is.EqualTo("Hello Chain"));
+
+            // 各インスタンスが生成されている
+            Assert.That(target.Bar, Is.Not.Null);
+            Assert.That(target.Bar.Baz, Is.Not.Null);
         }
 
         [Test]
@@ -24,9 +29,9 @@ namespace Tests
         {
             // 冗長なパターン
             // setup
-            var fooMock = new Mock<Foo>();
-            var barMock = new Mock<Bar>();
-            var bazMock = new Mock<Baz>();
+            var fooMock = new Mock<IFoo>();
+            var barMock = new Mock<IBar>();
+            var bazMock = new Mock<IBaz>();
 
             // when
             fooMock.Setup(m => m.Bar).Returns(barMock.Object);
@@ -34,21 +39,40 @@ namespace Tests
             bazMock.Setup(m => m.Message).Returns("Hello Redundant");
 
             // then
-            Foo target = fooMock.Object;
+            IFoo target = fooMock.Object;
             Assert.That(target.Bar.Baz.Message, Is.EqualTo("Hello Redundant"));
+            Assert.That(target.Bar.Baz, Is.Not.Null);
+
+            // 各インスタンスが生成されている
+            Assert.That(target.Bar, Is.Not.Null);
+            Assert.That(target.Bar.Baz, Is.Not.Null);
         }
 
-        public interface Foo
+        [Test]
+        public void Mock_モック化していない場合はNullReferenceException()
         {
-            Bar Bar { get; }
+            // setup
+            var fooMock = new Mock<IFoo>();
+
+            // when
+            // fooMock.Setup(m => m.Bar.Baz.Message).Returns("Hello Chain");
+
+            // then
+            IFoo target = fooMock.Object;
+            Assert.That(() => target.Bar.Baz.Message, Throws.TypeOf<NullReferenceException>());
         }
 
-        public interface Bar
+        public interface IFoo
         {
-            Baz Baz { get; }
+            IBar Bar { get; }
         }
 
-        public interface Baz
+        public interface IBar
+        {
+            IBaz Baz { get; }
+        }
+
+        public interface IBaz
         {
             string Message { get; }
         }
