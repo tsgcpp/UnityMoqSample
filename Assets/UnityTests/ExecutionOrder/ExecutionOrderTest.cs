@@ -43,7 +43,12 @@ namespace Tests
             _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.PreLateUpdate));
             _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.LastPreLateUpdate));
             _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.PostLateUpdate));
-            _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.LastPostLateUpdate));
+
+            // FYI: LastPostLateUpdateとコルーチンのWaitForEndOfFrameの順序をRuntimeとEditorで一致されることが難しいため検証からは除外
+            // _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.LastPostLateUpdate));
+
+            _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.TimeUpdate));
+            _processorUniTaskList.Add(CreateProcessorUniTask(PlayerLoopTiming.LastTimeUpdate));
         }
 
         [TearDown]
@@ -87,39 +92,40 @@ namespace Tests
         }
 
         [UnityTest]
-        public IEnumerator ExecutionOrder_UnitTaskとDefaultExecutionOrder混合の実行順の確認()
+        public IEnumerator ExecutionOrder_UnitTaskとDefaultExecutionOrder混合の実行順の確認() => UniTask.ToCoroutine(async () =>
         {
-            yield return new WaitForEndOfFrame();
+            await UniTask.Yield(timing: PlayerLoopTiming.LastPostLateUpdate);
             // まだコールバックが発生していないことの確認
             Assert.AreEqual(0, _callbackMessageList.Count);
 
             // 各コンポーネントの起動
             _processorOrderList.ForEach(processor => processor.enabled = true);
-            
+
             // UniTaskの実行
             _processorUniTaskList.ForEach(processor => processor.Process());
 
-            yield return new WaitForEndOfFrame();
-            Assert.AreEqual(18, _callbackMessageList.Count);
+            await UniTask.Yield(timing: PlayerLoopTiming.LastPostLateUpdate);
+            Assert.AreEqual(19, _callbackMessageList.Count);
 
-            Assert.AreEqual("UniTask PlayerLoopTiming.PreUpdate", _callbackMessageList[0]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.LastPreUpdate", _callbackMessageList[1]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.Update", _callbackMessageList[2]);
-            Assert.AreEqual("ProcessorOrderMinValue Update", _callbackMessageList[3]);
-            Assert.AreEqual("ProcessorOrderM1 Update", _callbackMessageList[4]);
-            Assert.AreEqual("ProcessorNoOrder Update", _callbackMessageList[5]);
-            Assert.AreEqual("ProcessorOrderP1 Update", _callbackMessageList[6]);
-            Assert.AreEqual("ProcessorOrderMaxValue Update", _callbackMessageList[7]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.LastUpdate", _callbackMessageList[8]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.PreLateUpdate", _callbackMessageList[9]);
-            Assert.AreEqual("ProcessorOrderMinValue LateUpdate", _callbackMessageList[10]);
-            Assert.AreEqual("ProcessorOrderM1 LateUpdate", _callbackMessageList[11]);
-            Assert.AreEqual("ProcessorNoOrder LateUpdate", _callbackMessageList[12]);
-            Assert.AreEqual("ProcessorOrderP1 LateUpdate", _callbackMessageList[13]);
-            Assert.AreEqual("ProcessorOrderMaxValue LateUpdate", _callbackMessageList[14]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.LastPreLateUpdate", _callbackMessageList[15]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.PostLateUpdate", _callbackMessageList[16]);
-            Assert.AreEqual("UniTask PlayerLoopTiming.LastPostLateUpdate", _callbackMessageList[17]);
-        }
+            Assert.AreEqual("UniTask PlayerLoopTiming.TimeUpdate", _callbackMessageList[0]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.LastTimeUpdate", _callbackMessageList[1]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.PreUpdate", _callbackMessageList[2]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.LastPreUpdate", _callbackMessageList[3]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.Update", _callbackMessageList[4]);
+            Assert.AreEqual("ProcessorOrderMinValue Update", _callbackMessageList[5]);
+            Assert.AreEqual("ProcessorOrderM1 Update", _callbackMessageList[6]);
+            Assert.AreEqual("ProcessorNoOrder Update", _callbackMessageList[7]);
+            Assert.AreEqual("ProcessorOrderP1 Update", _callbackMessageList[8]);
+            Assert.AreEqual("ProcessorOrderMaxValue Update", _callbackMessageList[9]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.LastUpdate", _callbackMessageList[10]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.PreLateUpdate", _callbackMessageList[11]);
+            Assert.AreEqual("ProcessorOrderMinValue LateUpdate", _callbackMessageList[12]);
+            Assert.AreEqual("ProcessorOrderM1 LateUpdate", _callbackMessageList[13]);
+            Assert.AreEqual("ProcessorNoOrder LateUpdate", _callbackMessageList[14]);
+            Assert.AreEqual("ProcessorOrderP1 LateUpdate", _callbackMessageList[15]);
+            Assert.AreEqual("ProcessorOrderMaxValue LateUpdate", _callbackMessageList[16]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.LastPreLateUpdate", _callbackMessageList[17]);
+            Assert.AreEqual("UniTask PlayerLoopTiming.PostLateUpdate", _callbackMessageList[18]);
+        });
     }
 }
