@@ -4,7 +4,7 @@ using Moq;
 
 namespace Tests
 {
-    public class MoqPropertyChainTest
+    public class TestMoqPropertyChain
     {
         [Test]
         public void Mock_プロパティチェーンでモック化する場合()

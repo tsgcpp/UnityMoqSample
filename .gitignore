@@ -77,3 +77,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Pp]lugins/
 /[Aa]ssets/[Pp]lugins.meta
 
+# Tool Outputs
+/PluginGenerationTool/PluginGenerationToolOutput/
