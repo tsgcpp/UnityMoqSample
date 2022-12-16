@@ -13,7 +13,7 @@ namespace Tests
     /// <summary>
     /// UnityのExecutionOrderとUniTaskのPlayerLoopTimingの実行順序確認テスト
     /// </summary>
-    public class ExecutionOrderTest
+    public class TestExecutionOrder
     {
         private List<string> _callbackMessageList;
 
