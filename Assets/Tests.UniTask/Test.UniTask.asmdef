@@ -1,5 +1,6 @@
 {
-    "name": "UnityTests",
+    "name": "Test.UniTask",
+    "rootNamespace": "Test.UniTask",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
@@ -12,9 +13,6 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll",
-        "System.Runtime.CompilerServices.Unsafe.dll",
-        "System.Threading.Tasks.Extensions.dll",
-        "Castle.Core.dll",
         "Moq.dll"
     ],
     "autoReferenced": false,
