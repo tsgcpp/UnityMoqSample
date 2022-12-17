@@ -1,15 +1,22 @@
+using System.Collections.Generic;
 using NUnit.Framework;
+using Moq;
 
 public class TestFuncProxy
 {
+    public interface IFunc
+    {
+        bool Invoke(int number);
+    }
+
     [Test]
     public void Invoke_ReturnsFalse_IfFuncReturnsFalse()
     {
         // Arrange
-        var mock = new Moq.Mock<IFunc>();
+        var mock = new Mock<IFunc>();
         var target = new FuncProxy(mock.Object);
 
-        // Note: Moqの仕様でSetupなしの場合はdefaultを返す (Invokeの場合はfalse)
+        // Note: Moqの仕様でSetupなしの場合はdefaultを返す (bool Invoke(...) の場合はfalse)
         // FYI: 実際のテストではテストパターンを明確にするために明示しましょう！
 
         // Act
@@ -23,7 +30,7 @@ public class TestFuncProxy
     public void Invoke_ReturnsTrue_IfFuncReturnsTrue()
     {
         // Arrange
-        var mock = new Moq.Mock<IFunc>();
+        var mock = new Mock<IFunc>();
         var target = new FuncProxy(mock.Object);
 
         // Note: 引数3を渡されたらtrueを返す
@@ -39,10 +46,10 @@ public class TestFuncProxy
     [Test]
     public void Example_SetupSequence()
     {
-        var mock = new Moq.Mock<IFunc>();
+        var mock = new Mock<IFunc>();
 
         // 渡された引数に関係なくfalse -> true -> false -> throw Exception
-        mock.SetupSequence(m => m.Invoke(Moq.It.IsAny<int>()))
+        mock.SetupSequence(m => m.Invoke(It.IsAny<int>()))
             .Returns(false)
             .Returns(true)
             .Returns(false)
@@ -57,16 +64,43 @@ public class TestFuncProxy
     [Test]
     public void Example_Verify()
     {
-        var mock = new Moq.Mock<IFunc>();
+        var mock = new Mock<IFunc>();
 
         mock.Object.Invoke(2);
         mock.Object.Invoke(2);
         mock.Object.Invoke(2);
 
-        mock.Verify(m => m.Invoke(2), Moq.Times.Exactly(3));
+        mock.Verify(m => m.Invoke(2), Times.Exactly(3));
 
         // 引数関係なく1回以上コールされたことの検査
-        mock.Verify(m => m.Invoke(Moq.It.IsAny<int>()), Moq.Times.AtLeastOnce);
+        mock.Verify(m => m.Invoke(It.IsAny<int>()), Times.AtLeastOnce);
+    }
+
+    [Test]
+    public void Example_Callback()
+    {
+        var messageList = new List<string>();
+
+        var mock1 = new Mock<IFunc>();
+        var mock2 = new Mock<IFunc>();
+        var mock3 = new Mock<IFunc>();
+
+        // コールされたら messageList に文字列を追加
+        mock1.Setup(m => m.Invoke(It.IsAny<int>())).Callback(() => messageList.Add("From 1"));
+        mock2.Setup(m => m.Invoke(It.IsAny<int>())).Callback(() => messageList.Add("From 2"));
+        mock3.Setup(m => m.Invoke(It.IsAny<int>())).Callback(() => messageList.Add("From 3"));
+
+        mock3.Object.Invoke(0);
+        mock1.Object.Invoke(0);
+        mock2.Object.Invoke(0);
+        mock1.Object.Invoke(0);
+
+        // 合計のコール回数 及び コールされた順番を検査
+        Assert.That(messageList.Count, Is.EqualTo(4));
+        Assert.That(messageList[0], Is.EqualTo("From 3"));
+        Assert.That(messageList[1], Is.EqualTo("From 1"));
+        Assert.That(messageList[2], Is.EqualTo("From 2"));
+        Assert.That(messageList[3], Is.EqualTo("From 1"));
     }
 
     public sealed class FuncProxy
@@ -78,16 +112,9 @@ public class TestFuncProxy
         public bool Invoke(int number) => this.func.Invoke(number);
     }
 
-    public interface IFunc
-    {
-        bool Invoke(int number);
-    }
     public sealed class ActualFunc : IFunc
     {
-        public bool Invoke(int number)
-        {
-            throw new System.NotImplementedException();
-        }
+        public bool Invoke(int number) => number > 0;
     }
 }
 
