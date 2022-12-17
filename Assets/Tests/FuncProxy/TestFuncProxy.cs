@@ -67,13 +67,14 @@ public class TestFuncProxy
         var mock = new Mock<IFunc>();
 
         mock.Object.Invoke(2);
-        mock.Object.Invoke(2);
+        mock.Object.Invoke(5);
         mock.Object.Invoke(2);
 
-        mock.Verify(m => m.Invoke(2), Times.Exactly(3));
+        // 引数2で2回コールされたことの検証
+        mock.Verify(m => m.Invoke(2), Times.Exactly(2));
 
-        // 引数関係なく1回以上コールされたことの検査
-        mock.Verify(m => m.Invoke(It.IsAny<int>()), Times.AtLeastOnce);
+        // 引数関係なく3回以上コールされたことの検査
+        mock.Verify(m => m.Invoke(It.IsAny<int>()), Times.AtLeast(3));
     }
 
     [Test]
