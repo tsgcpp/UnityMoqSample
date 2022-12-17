@@ -46,7 +46,7 @@ unzip "${OBJ_DIR}/system.runtime.compilerservices.unsafe.nupkg" -d "${OBJ_DIR}/s
 
 echo "### .NET Standard 2.1 ###"
 mkdir -p "${DOTNET_STANDARD21_PLUGINS_DIR}"
-cp "${DOTNET_STANDARD21_LICENSE_FILE}" "${DOTNET_STANDARD21_DIR}"
+cp "${DOTNET_STANDARD21_LICENSE_FILE}" "${DOTNET_STANDARD21_DIR}/LICENSE.md"
 cp \
   "${OBJ_DIR}/moq/lib/netstandard2.1/Moq.dll" \
   "${META_FILES_DIR}/Moq.dll.meta" \
@@ -59,7 +59,7 @@ echo "[INFO] .NET Standard 2.1 => \"${DOTNET_STANDARD21_PLUGINS_DIR}\""
 
 echo "### .NET Framework ###"
 mkdir -p "${DOTNET_FRAMEWORK_PLUGINS_DIR}"
-cp "${DOTNET_FRAMEWORK_LICENSE_FILE}" "${DOTNET_FRAMEWORK_DIR}"
+cp "${DOTNET_FRAMEWORK_LICENSE_FILE}" "${DOTNET_FRAMEWORK_DIR}/LICENSE.md"
 cp \
   "${OBJ_DIR}/moq/lib/net462/Moq.dll" \
   "${META_FILES_DIR}/Moq.dll.meta" \
