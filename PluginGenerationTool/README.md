@@ -26,7 +26,7 @@ $ bash generate_moq_plugins.sh
 コマンド完了後に`PluginGenerationToolOutput`ディレクトリにUnity用にMoqを構成したディレクトリが生成されます。  
 Unityプロジェクトの "Api Compatibility Level" に合った方を使用してください。
 
-- "Api Compatibility Level"が".NET Standard 2.1" の場合は`PluginGenerationToolOutput/netstandard2.1`を使用
+- "Api Compatibility Level"が".NET Standard 2.1"の場合は`PluginGenerationToolOutput/netstandard2.1`を使用
 - "Api Compatibility Level"が".NET Framework"の場合は`PluginGenerationToolOutput/net462`を使用
 
 ## GitHub Acrtionsを使用する場合
@@ -47,7 +47,7 @@ Unityプロジェクトの "Api Compatibility Level" に合った方を使用し
 ### 3. Api Compatibility Levelに合わせてArtifactをダウンロード
 完了するとzipファイルとしてダウンロード可能となります。
 
-- "Api Compatibility Level"が".NET Standard 2.1" の場合は "Moq for Unity (.NET Standard 2.1)" をダウンロードして使用
+- "Api Compatibility Level"が".NET Standard 2.1"の場合は "Moq for Unity (.NET Standard 2.1)" をダウンロードして使用
 - "Api Compatibility Level"が".NET Framework"の場合は "Moq for Unity (.NET Framework)" をダウンロードして使用
 
 ※ダウンロード期限は生成後2日に設定しています。
