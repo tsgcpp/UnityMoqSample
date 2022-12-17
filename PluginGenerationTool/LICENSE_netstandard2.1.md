@@ -1,7 +1,7 @@
 # LICENSE
 
 ## Moq
-[https://github.com/moq/moq4/blob/main/License.txt]
+https://github.com/moq/moq4/blob/main/License.txt
 
 ```
 BSD 3-Clause License
@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
 ## Castle Core
-[https://github.com/castleproject/Core/blob/master/LICENSE]
+https://github.com/castleproject/Core/blob/master/LICENSE
 
 ```
 Copyright 2004-2021 Castle Project - http://www.castleproject.org/
@@ -55,7 +55,7 @@ limitations under the License.
 ```
 
 ## System.Diagnostics.EventLog
-[https://github.com/dotnet/runtime/blob/main/LICENSE.TXT]
+https://github.com/dotnet/runtime/blob/main/LICENSE.TXT
 
 ```
 The MIT License (MIT)
