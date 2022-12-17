@@ -4,13 +4,14 @@ set -eu
 WORK_DIR="PluginGenerationToolOutput"
 OBJ_DIR="${WORK_DIR}/obj"
 META_FILES_DIR="./MetaFiles"
-LICENSE_FILE="./LICENSE.md"
 
 PLUGINS_DIR="Plugins/Moq"
 DOTNET_STANDARD21_DIR="${WORK_DIR}/netstandard2.1"
 DOTNET_STANDARD21_PLUGINS_DIR="${DOTNET_STANDARD21_DIR}/${PLUGINS_DIR}"
+DOTNET_STANDARD21_LICENSE_FILE="./LICENSE_netstandard2.1.md"
 DOTNET_FRAMEWORK_DIR="${WORK_DIR}/net462"
 DOTNET_FRAMEWORK_PLUGINS_DIR="${DOTNET_FRAMEWORK_DIR}/${PLUGINS_DIR}"
+DOTNET_FRAMEWORK_LICENSE_FILE="./LICENSE_net462.md"
 
 MOQ_VERSION="4.18.3"
 CASTLECORE_VERSION="5.1.0"
@@ -45,7 +46,7 @@ unzip "${OBJ_DIR}/system.runtime.compilerservices.unsafe.nupkg" -d "${OBJ_DIR}/s
 
 echo "### .NET Standard 2.1 ###"
 mkdir -p "${DOTNET_STANDARD21_PLUGINS_DIR}"
-cp "${LICENSE_FILE}" "${DOTNET_STANDARD21_DIR}"
+cp "${DOTNET_STANDARD21_LICENSE_FILE}" "${DOTNET_STANDARD21_DIR}"
 cp \
   "${OBJ_DIR}/moq/lib/netstandard2.1/Moq.dll" \
   "${META_FILES_DIR}/Moq.dll.meta" \
@@ -58,7 +59,7 @@ echo "[INFO] .NET Standard 2.1 => \"${DOTNET_STANDARD21_PLUGINS_DIR}\""
 
 echo "### .NET Framework ###"
 mkdir -p "${DOTNET_FRAMEWORK_PLUGINS_DIR}"
-cp "${LICENSE_FILE}" "${DOTNET_FRAMEWORK_DIR}"
+cp "${DOTNET_FRAMEWORK_LICENSE_FILE}" "${DOTNET_FRAMEWORK_DIR}"
 cp \
   "${OBJ_DIR}/moq/lib/net462/Moq.dll" \
   "${META_FILES_DIR}/Moq.dll.meta" \
