@@ -1,0 +1,33 @@
+name: "Generate Moq Plugins"
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    name: Download and Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: 'Execute ./PluginGenerationTool/generate_moq_plugins.sh'
+        shell: bash
+        run: |
+          cd ./PluginGenerationTool/
+          bash ./generate_moq_plugins.sh
+
+      - name: 'Artifact .NET Standard 2.1'
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Moq for Unity (.NET Standard 2.1)'
+          path: './PluginGenerationTool/PluginGenerationToolOutput/netstandard2.1'
+          retention-days: 2
+
+      - name: 'Artifact .NET Framework'
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'Moq for Unity (.NET Framework)'
+          path: './PluginGenerationTool/PluginGenerationToolOutput/net462'
+          retention-days: 2
