@@ -5,7 +5,10 @@
 
 作者または著作権者は、ソフトウェアに関してなんら責任を負いません。
 
-各モジュールのライセンスは [LICENSE.md](./LICENSE.md) をご確認ください。
+各モジュールのライセンスは以下をご確認ください。
+
+- ".NET Standard 2.1"は [LICENSE_netstandard2.1.md](./LICENSE_netstandard2.1.md)
+- ".NET Framework"は [LICENSE_net462.md](./LICENSE_net462.md)
 
 ## Pluginsフォルダの配置方法
 Pluginsフォルダの配置は以下を参考にしてください。
