@@ -1,7 +1,7 @@
 # Unity用Moq生成ツール
 
 ## WARNING
-以下のスクリプトは [MIT License](../LICENSE.md) として公開しています。
+以下のスクリプトは [BSD 3-Clause License](../LICENSE.md) として公開しています。
 
 作者または著作権者は、ソフトウェアに関してなんら責任を負いません。
 
